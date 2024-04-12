@@ -9,7 +9,7 @@ print(data)
 
 
 
-(message, departements) = DepartementDao.get_all()
+(message, departements) = DepartementDao.list_all()
 departements= Departement('')
 print(message)
 

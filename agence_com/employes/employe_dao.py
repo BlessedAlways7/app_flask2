@@ -63,7 +63,7 @@ class EmployeDao:
         EmployeDao.connexion.commit() 
         EmployeDao.cursor.close()
 
-        return f"L'employé de matricule {emp.matricule} est mise à avec succès"
+        return f"L'employé de matricule {emp.matricule} est mise à jour avec succès"
 
     @classmethod
     def test(cls):

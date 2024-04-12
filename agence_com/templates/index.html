@@ -1,30 +1,36 @@
 {% extends 'default.html' %}
 
-{% block title %} Acceuil  {% endblock %}
+{% block title %} Accueil  {% endblock %}
 {% block content %}
 
-<h1>Bienvenue sur notre page d'acceuil</h1>
+
+<h1>Bienvenue sur la page d'acccueil</h1>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceuil</title>
+    <title>Agence</title>
 </head>
 <body>
-    <h1>Acceuil</h1>
+    <style>
+        .spacer {
+            margin-bottom: 100px; /* Adds 20 pixels of space below the element */
+        }
+    </style>
     
-    AGENCE_COM représente une grande variété d’artistes provenant de nombreuses disciplines artistiques. 
-    Qu’ils soient comédiens, animateurs, auteurs, scénaristes, metteurs en scène, réalisateurs, chanteurs ou acteurs-doubleurs, 
-    l’Agence Jocelyn Robitaille est fière de participer au développement de ses artistes. 
-
-    Au fil des années, notre agence artistique s’est bâtie une solide réputation basée sur une grande rigueur professionnelle. 
-    Qu’un artiste soit débutant ou chevronné, notre équipe met tout en place pour que celui-ci atteigne ses objectifs professionnels. 
-    Pour en apprendre davantage sur l’Agence Jocelyn Robitaille et les artistes exceptionnels que nous représentons, nous vous invitons à parcourir notre site. 
-    Vous trouverez les différentes catégories au haut de cette page.
-
+    <div class="spacer"></div>
+    
+        <img src="https://www.digital-instore.fr/wp-content/uploads/2017/05/agence-voyage-nouvelle-generation.jpg" atl = "agence" style="max-width: 500px; max-height: 500px;">
+    </div>
 </body>
 </html>
+
+
+{%if 'username' in session %}
+    <p>Bonjour, {{session[username]}} ! Vous êtes connecte sur votre compte.</p>
+
+{% endif%}
 
 {% endblock %}
