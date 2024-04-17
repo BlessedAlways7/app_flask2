@@ -1,5 +1,7 @@
+from base64 import decode
 from flask import Flask,render_template, request, redirect, session, url_for
 from flask_bcrypt import Bcrypt
+
 
 from employes.employe_dao import EmployeDao
 from employes.employe import Employe
@@ -12,6 +14,7 @@ from users.user import User
 app = Flask(__name__)
 app.secret_key = 'clesecrete'
 bcrypt = Bcrypt(app)
+
 
 @app.route("/")
 def home():
@@ -54,6 +57,7 @@ def add_employe():
         print(message)
     return render_template('add_employe.html', message= message, employe=employe)
 
+
 @app.route("/departements")
 def departements():
     if 'username' not in session:
@@ -93,7 +97,7 @@ def registrer():
         username = req ['username']
         password = req ['password']
         #Hash password
-        hashed_password = bcrypt.generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         #print('hasshed_password:', hashed_password)
         
         if nom_complet=="" or username=="" or password=="" :
@@ -109,21 +113,30 @@ def login():
     req = request.form
     message =None
     user = None
+
     if request.method == "POST":
         username = req ['username']
         password = req ['password']     
+        
         if username=="" or password=="":
             message="error"
         else:
-            # check password
-            (message,user) = UserDao.get_one(username, password)
+            # Chercher hashed password de la base de donnée base sur username
+            hashed_password_bd = UserDao.get_hashed_password(username,password)
+            if hashed_password_bd:
+                # Verifier si le mot de passe est correct
+                if bcrypt.check_password_hash(hashed_password_bd,password):
+                    message = 'success'
+                    user=UserDao.get_one(username, password)
+                    if user:
+                        session['nom_complet']=user[1] #On met le nom complet dans notre variable de session
+                        session['username']=user[2] # On met le username dans notre variable de session
+                        return redirect(url_for("home"))   
             
-            if message =='success' and user != None: # None ==> Null
-                session['nom_complet']=user[1] #On met le nom complet dans notre variable de session
-                session['username']=user[2] # On met le username dans notre variable de session
-                return redirect(url_for("home"))    
+        message= 'Username et password invalide'
     return render_template('login.html', message=message, user=None)
-
+    
+   
 @app.route("/logout")
 def logout():
     session.clear() # On vide la session

@@ -1,5 +1,6 @@
 import database
 from users.user import User
+from flask_bcrypt import Bcrypt
 
 
 
@@ -45,3 +46,23 @@ class UserDao:
             message= user
         return (message, user)
     
+    @classmethod
+    def get_hashed_password(cls, username, password):
+        sql = "SELECT password FROM user WHERE username = %s"
+        try:
+            UserDao.cursor.execute(sql, (username,))
+            hashed_password = UserDao.cursor.fetchone()
+            if hashed_password:
+                hashed_password = hashed_password[0]
+                is_valid = Bcrypt.check_password_hash(hashed_password, password)
+                
+                if is_valid:    
+                    return hashed_password  
+                else:
+                    message= "Password incorrect"
+            else:
+                message = "Username not found"
+        except Exception as eror:
+            print("Error occurred while fetching hashed password")
+            message = 'failure'        
+        return (message)
